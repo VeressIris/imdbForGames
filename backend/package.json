@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "express-session": "^1.18.1",
-    "mongoose": "^8.14.1"
+    "mongoose": "^8.14.1",
+    "psn-api": "^2.11.2"
   }
 }

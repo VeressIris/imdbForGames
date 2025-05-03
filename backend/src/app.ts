@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/errorHandler';
 import homeRouter from './routes/home';
 import steamRouter from './routes/steamRoutes';
+import psnRouter from './routes/psnRoutes';
 
 dotenv.config();
 const app = express();
@@ -53,9 +54,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-//ex: app.use('/endpoint', endpointRouter);
 app.use('/', homeRouter);
 app.use('/steam', steamRouter);
+app.use('/psn', psnRouter);
 
 // Global error handler
 app.use(errorHandler);
