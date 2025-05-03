@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import Game from './Game';
 const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
@@ -19,6 +20,10 @@ const userSchema = new Schema({
     type: String,
     required: false,
   },
+  psnId: {
+    type: String,
+    required: false,
+  },
   createdLists: {
     type: [Schema.Types.ObjectId],
     ref: 'List',
@@ -27,6 +32,21 @@ const userSchema = new Schema({
   savedLists: {
     type: [Schema.Types.ObjectId],
     ref: 'List',
+    default: [],
+  },
+  ownedGames: {
+    type: [Game],
+    ref: 'Game',
+    default: [],
+  },
+  favoriteGames: {
+    type: [Game],
+    ref: 'Game',
+    default: [],
+  },
+  wishlistedGames: {
+    type: [Game],
+    ref: 'Game',
     default: [],
   },
 });

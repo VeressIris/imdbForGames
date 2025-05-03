@@ -9,14 +9,21 @@ const gameSchema = new Schema({
   },
   description: {
     type: String,
-    required: false,
+    required: true,
   },
   coverUrl: {
     type: String,
-    required: false,
+    required: true,
   },
-  genres: [String],
-  platforms: [String],
+  genres: {
+    type: [String],
+    required: true,
+  },
+  platforms: {
+    type: [String],
+    required: true,
+  }, // ex: ['PC', 'PS5', 'Xbox']
+  store: [String], // ex: ['Steam', 'Epic Games', 'Playstation Store'] - the store from which the user got the games
   releaseDate: {
     type: Date,
     required: true,
