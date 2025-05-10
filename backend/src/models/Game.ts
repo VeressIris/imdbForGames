@@ -4,11 +4,38 @@ const gameSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  releaseDate: {
+    type: Date,
+    required: true,
   },
   coverUrl: {
     type: String,
     required: true,
+  },
+  genres: {
+    type: [String],
+    required: true,
+  },
+  timeToBeat: {
+    type: {
+      mainStory: {
+        type: Number,
+        required: true,
+      },
+      mainPlusExtra: {
+        type: Number,
+        required: true,
+      },
+      completionist: {
+        type: Number,
+        required: true,
+      },
+    },
   },
   platforms: {
     type: [
@@ -19,26 +46,15 @@ const gameSchema = new Schema({
     ],
     required: true,
   },
-  store: {
+  stores: {
     type: {
       type: String,
       enum: ['Steam', 'Playstation Store', 'Epic Games Store', 'Xbox Store'],
     },
     required: true,
   },
-  earnedAchievements: {
-    type: Number,
-    required: true,
-  },
   totalNumberOfAchievements: {
     type: Number,
-    required: true,
-  },
-  playingStatus: {
-    type: String,
-    enum: ['playing', 'finished', 'not started', '100%'],
-    default: 'not started',
-    required: true,
   },
 });
 

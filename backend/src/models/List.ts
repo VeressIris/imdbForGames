@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import Game from './Game';
 const { Schema, model } = mongoose;
 
 const listSchema = new Schema({
@@ -12,7 +11,15 @@ const listSchema = new Schema({
     type: String,
     required: false,
   },
-  games: { type: [Game], default: [] },
+  games: {
+    type: [
+      {
+        gameId: Schema.Types.ObjectId, // -> Game model
+        gameName: String,
+      },
+    ],
+    default: [],
+  },
   createdBy: {
     username: {
       type: String,
@@ -28,14 +35,7 @@ const listSchema = new Schema({
     default: Date.now,
   },
   favoritedBy: {
-    type: [
-      {
-        _id: {
-          type: Schema.Types.ObjectId,
-          required: true,
-        },
-      },
-    ],
+    type: [Schema.Types.ObjectId],
     default: [],
   },
 });

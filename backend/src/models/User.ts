@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import Game from './Game';
+import UserGame from './UserGame';
 const { Schema, model } = mongoose;
 
 const userSchema = new Schema({
@@ -10,19 +10,19 @@ const userSchema = new Schema({
   },
   description: {
     type: String,
-    required: false,
   },
   imageUrl: {
     type: String,
-    required: false,
+  },
+  clerkId: {
+    type: String,
+    required: true,
   },
   steamId: {
     type: String,
-    required: false,
   },
   psnId: {
     type: String,
-    required: false,
   },
   createdLists: {
     type: [Schema.Types.ObjectId],
@@ -35,18 +35,26 @@ const userSchema = new Schema({
     default: [],
   },
   ownedGames: {
-    type: [Game],
-    ref: 'Game',
+    type: [UserGame],
+    ref: 'UserGame',
     default: [],
   },
   favoriteGames: {
-    type: [Game],
-    ref: 'Game',
+    type: [
+      {
+        gameId: Schema.Types.ObjectId, // -> Game model
+        gameName: String,
+      },
+    ],
     default: [],
   },
   wishlistedGames: {
-    type: [Game],
-    ref: 'Game',
+    type: [
+      {
+        gameId: Schema.Types.ObjectId, // -> Game model
+        gameName: String,
+      },
+    ],
     default: [],
   },
 });
