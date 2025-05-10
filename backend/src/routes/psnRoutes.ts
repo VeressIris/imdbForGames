@@ -1,9 +1,5 @@
 import { Router } from 'express';
-import {
-  authenticate,
-  getUserGames,
-  getUserGameAchievements,
-} from '../controllers/psnController';
+import { searchUsers } from '../controllers/psnController';
 
 const router = Router();
 
@@ -13,8 +9,6 @@ router.get('/', (req, res) => {
     .json({ message: 'Welcome to the imdbForGames PSN middleware API!' });
 });
 
-router.get('/authenticate', authenticate);
-router.get('/getUserGames', getUserGames);
-router.get('/getUserGameAchievements', getUserGameAchievements);
+router.get('/searchUsers', searchUsers);
 
 export default router;

@@ -1,10 +1,5 @@
 import { Router } from 'express';
-import {
-  authenticate,
-  returnAuth,
-  getUserGames,
-  getUserGameAchievements,
-} from '../controllers/steamController';
+import { authenticate, returnAuth } from '../controllers/steamController';
 
 const router = Router();
 
@@ -18,7 +13,5 @@ router.get('/authenticate', authenticate, function (req, res) {
   res.redirect('/');
 });
 router.get('/authReturn', authenticate, returnAuth);
-router.get('/getUserGames', getUserGames);
-router.get('/getUserGameAchievements', getUserGameAchievements);
 
 export default router;
