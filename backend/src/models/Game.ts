@@ -6,30 +6,25 @@ const gameSchema = new Schema({
     required: true,
     unique: true,
   },
-  description: {
-    type: String,
-    // required: true,
-  },
   coverUrl: {
     type: String,
-    // required: true,
-  },
-  genres: {
-    type: [String],
-    // required: true,
+    required: true,
   },
   platforms: {
-    type: [String],
-    enum: ['PC', 'PS5', 'Xbox', 'Switch', 'PS4', 'PS3'],
-    // required: true,
-  }, // ex: ['PC', 'PS5', 'Xbox']
-  store: [String], // ex: ['Steam', 'Epic Games', 'Playstation Store'] - the store from which the user got the games
-  releaseDate: {
-    type: Date,
-    // required: true,
+    type: [
+      {
+        type: String,
+        enum: ['PC', 'PS5', 'PS4', 'PS3', 'Xbox', 'Switch'],
+      },
+    ],
+    required: true,
   },
-  steamId: {
-    type: String,
+  store: {
+    type: {
+      type: String,
+      enum: ['Steam', 'Playstation Store', 'Epic Games Store', 'Xbox Store'],
+    },
+    required: true,
   },
   earnedAchievements: {
     type: Number,

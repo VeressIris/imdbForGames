@@ -22,7 +22,9 @@ export const getPsnUserGames = async (psnId: string) => {
 
   const allGames = response.trophyTitles;
   const filteredGames = allGames.filter(
-    (game: any) => !game.trophyTitlePlatform.includes('PSPC'),
+    (game: any) =>
+      !game.trophyTitlePlatform.includes('PSPC') &&
+      !game.trophyTitleName.includes('Trophies'),
   );
   return filteredGames;
 };
