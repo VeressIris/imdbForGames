@@ -1,14 +1,7 @@
 import { Request, Response } from 'express';
-import {
-  getSteamUserGames,
-  getSteamUserGameAchievementData,
-} from '../services/steamService';
-import { getPsnUserGames } from '../services/psnService';
-import { countPSNTrophies, setPlayingStatus, cleanUpPSNNames } from '../utils';
-import { rateLimitedGetGameCoverUrl } from '../services/igdbService';
-import pLimit from 'p-limit';
-
-const limit = pLimit(3);
+import User from '../models/User';
+import Game from '../models/Game';
+import { getUserLibrary, addOwnedGame } from '../services/userService';
 
 export const compileUserLibrary = async (
   req: Request,
@@ -20,66 +13,45 @@ export const compileUserLibrary = async (
     return res.status(400).json({ error: 'No user ID provided' });
   }
 
-  let games: Array<any> = [];
+  const games = await getUserLibrary(steamId as string, psnId as string);
 
-  if (steamId) {
-    const steamGames = await getSteamUserGames(steamId as string);
-    const filteredGames = await Promise.all(
-      steamGames.map(async (game: any) =>
-        limit(async () => {
-          const coverUrl = await rateLimitedGetGameCoverUrl(game.name);
-          const { earnedAchievements, totalAchievements } =
-            await getSteamUserGameAchievementData(
-              game.appid,
-              steamId as string,
-            );
+  games.forEach(async (game: any) => {
+    addOwnedGame(game, '21');
+  });
 
-          return {
-            name: game.name,
-            coverUrl,
-            store: ['Steam'],
-            platforms: ['PC'],
-            playingStatus: setPlayingStatus(
-              game.playtime_forever,
-              earnedAchievements,
-              totalAchievements,
-            ),
-            earnedAchievements,
-            totalNumberOfAchievements: totalAchievements,
-          };
-        }),
-      ),
-    );
-    games = [...games, ...filteredGames];
-  }
+  res.status(200).json(games);
+};
 
-  //TODO: see what you can do if the user has a game on steam AND psn
+export const addUser = async (req: Request, res: Response) => {
+  const userData = req.body;
+  console.log('User data received:', userData);
 
-  if (psnId) {
-    const psnGames = await getPsnUserGames(psnId as string);
-    const filteredGames = await Promise.all(
-      psnGames.map(async (game: any) =>
-        limit(async () => {
-          return {
-            name: cleanUpPSNNames(game.trophyTitleName),
-            coverUrl: await rateLimitedGetGameCoverUrl(
-              cleanUpPSNNames(game.trophyTitleName),
-            ),
-            store: ['Playstation Store'],
-            platforms: game.trophyTitlePlatform.split(','),
-            playingStatus: setPlayingStatus(
-              undefined,
-              countPSNTrophies(game.earnedTrophies),
-              countPSNTrophies(game.definedTrophies),
-            ),
-            earnedAchievements: countPSNTrophies(game.earnedTrophies),
-            totalNumberOfAchievements: countPSNTrophies(game.definedTrophies),
-          };
-        }),
-      ),
-    );
-    games = [...games, ...filteredGames];
-  }
+  // TODO: fix this to integrate with clerk and all the other data
+  const user = new User({
+    username: userData.username,
+    clerkId: 1,
+  });
 
-  res.send(games);
+  user
+    .save()
+    .then(() => {
+      console.log('User saved to database');
+    })
+    .catch((err) => {
+      console.error('Error saving user to database:', err);
+    });
+
+  res.status(200).json({ message: 'User added to database' });
+};
+
+export const addGameToLibrary = async (
+  req: Request,
+  res: Response,
+): Promise<any> => {
+  const gameData = req.body;
+  const userId = req.query.userId;
+
+  addOwnedGame(gameData, userId as string);
+
+  res.status(200).json({ message: 'Game added to library' });
 };

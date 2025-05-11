@@ -41,3 +41,27 @@ export function setPlayingStatus(
 export function cleanUpPSNNames(name: string): string {
   return name.replace(/[^a-zA-Z0-9 .,;:'"!?()\-]/g, '');
 }
+
+export function getStoresFromPlatforms(platforms: JSON[]): string[] {
+  const stores: string[] = [];
+  platforms.forEach((platform: any) => {
+    switch (platform.name) {
+      case 'PC':
+        stores.push('Steam');
+        break;
+      case 'PS4':
+      case 'PS5':
+        stores.push('Playstation Store');
+        break;
+      case 'XBOX':
+        stores.push('Xbox Store');
+        break;
+      case 'SWITCH':
+        stores.push('Nintendo eShop');
+        break;
+      default:
+        stores.push('Unknown Store');
+    }
+  });
+  return stores;
+}

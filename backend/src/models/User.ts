@@ -1,6 +1,5 @@
-import mongoose from 'mongoose';
-import UserGame from './UserGame';
-const { Schema, model } = mongoose;
+import { userGameSchema } from './UserGame';
+import { Schema, model, InferSchemaType } from 'mongoose';
 
 const userSchema = new Schema({
   username: {
@@ -35,8 +34,7 @@ const userSchema = new Schema({
     default: [],
   },
   ownedGames: {
-    type: [UserGame],
-    ref: 'UserGame',
+    type: [userGameSchema],
     default: [],
   },
   favoriteGames: {
@@ -59,6 +57,7 @@ const userSchema = new Schema({
   },
 });
 
+export type UserType = InferSchemaType<typeof userSchema>;
 const User = model('User', userSchema);
 
 export default User;

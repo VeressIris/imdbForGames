@@ -37,3 +37,30 @@ export const rateLimitedGetGameCoverUrl = async (
 
   return getGameCoverUrl(gameName);
 };
+
+export const getCoreGameData = async (gameName: string) => {
+  const res = await fetch('https://api.igdb.com/v4/games', {
+    method: 'POST',
+    headers: getHeaders(),
+    body: `search "${gameName}";\nfields genres.name, platforms.name, first_release_date, summary;`,
+  });
+
+  if (!res.ok) {
+    console.error(`IGDB error: ${res.status} ${res.statusText}`);
+    return {
+      message: 'Error fetching game data',
+    };
+  }
+
+  const json = await res.json();
+
+  if (!json.length) {
+    console.warn(`No game data found for: "${gameName}"`);
+    return {
+      message: 'No game data found',
+    };
+  }
+
+  console.log(json[0]);
+  return json[0];
+};
