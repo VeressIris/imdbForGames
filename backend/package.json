@@ -34,6 +34,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "better-auth": "^1.2.7",
     "express-session": "^1.18.1",
     "mongoose": "^8.14.1",
     "p-limit": "3.1",
