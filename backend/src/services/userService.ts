@@ -15,11 +15,11 @@ import {
   getCoreGameData,
   rateLimitedGetGameCoverUrl,
 } from '../services/igdbService';
-import { getTimeToBeat } from './howLongtoBeatService';
 import pLimit from 'p-limit';
 
 const limit = pLimit(3);
-export const getUserLibrary = async (
+
+export const compileUserLibrary = async (
   steamId: string | undefined,
   psnId: string | undefined,
 ) => {
@@ -106,7 +106,6 @@ export const addOwnedGame = async (game: any, userId: string) => {
       stores: getStoresFromPlatforms(coreGameData.platforms),
       platforms: coreGameData.platforms.map((platform: any) => platform.name),
       totalNumberOfAchievements: game.totalNumberOfAchievements,
-      timeToBeat: getTimeToBeat(game.name),
       genres: coreGameData.genres.map((genre: any) => genre.name),
       description: coreGameData.summary,
       releaseDate: new Date(coreGameData.first_release_date * 1000),

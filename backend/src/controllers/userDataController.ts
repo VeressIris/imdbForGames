@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
-import Game from '../models/Game';
-import { getUserLibrary, addOwnedGame } from '../services/userService';
+import { compileUserLibrary, addOwnedGame } from '../services/userService';
 
-export const compileUserLibrary = async (
+export const saveUserLibrary = async (
   req: Request,
   res: Response,
 ): Promise<any> => {
@@ -13,7 +12,7 @@ export const compileUserLibrary = async (
     return res.status(400).json({ error: 'No user ID provided' });
   }
 
-  const games = await getUserLibrary(steamId as string, psnId as string);
+  const games = await compileUserLibrary(steamId as string, psnId as string);
 
   games.forEach(async (game: any) => {
     addOwnedGame(game, '21');
@@ -54,4 +53,18 @@ export const addGameToLibrary = async (
   addOwnedGame(gameData, userId as string);
 
   res.status(200).json({ message: 'Game added to library' });
+};
+
+export const getUserLibrary = async (
+  req: Request,
+  res: Response,
+): Promise<any> => {
+  const userId = req.query.userId; // replace this with clerkId
+  if (!userId) {
+    return res.status(400).json({ error: 'No user ID provided' });
+  }
+
+  const user = await User.findOne({ clerkId: userId }).exec();
+
+  return res.status(200).json(user!.ownedGames);
 };
