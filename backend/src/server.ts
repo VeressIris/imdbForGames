@@ -1,14 +1,19 @@
 import app from './app';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-
+import { connectToDatabase } from './utils';
 dotenv.config();
 
-app.listen(3000, () => {
-  console.log(`Server running on port 3000`);
- 
-  if (!process.env.MONGODB_URI) {
-    throw new Error('MONGODB_URI is not defined in the environment variables');
+const startServer = async () => {
+  try {
+    await connectToDatabase();
+
+    app.listen(3000, () => {
+      console.log('Server running on port 3000');
+    });
+  } catch (error) {
+    console.error('Failed to start the server:', error);
+    process.exit(1);
   }
-  mongoose.connect(process.env.MONGODB_URI);
-});
+};
+
+startServer();

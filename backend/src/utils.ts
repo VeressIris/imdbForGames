@@ -4,6 +4,21 @@ export const getHeaders = () => ({
   Authorization: `Bearer ${process.env.IGDB_ACCESS_TOKEN}`,
 });
 
+import mongoose from 'mongoose';
+export const connectToDatabase = async () => {
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI is not defined in the environment variables');
+  }
+
+  try {
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1); // Exit the process if the connection fails
+  }
+};
+
 interface PSNTrophies {
   bronze: number;
   silver: number;
