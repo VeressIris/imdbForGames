@@ -5,9 +5,8 @@ import { Strategy as SteamStrategy } from 'passport-steam';
 import session from 'express-session';
 import dotenv from 'dotenv';
 import { errorHandler } from './middlewares/errorHandler';
-import homeRouter from './routes/home';
-import steamRouter from './routes/steamRoutes';
-import psnRouter from './routes/psnRoutes';
+import userRouter from './routes/user';
+import authenticateRouter from './routes/authenticateRoutes';
 
 dotenv.config();
 const app = express();
@@ -37,7 +36,7 @@ passport.deserializeUser(function (obj: any, done) {
 passport.use(
   new SteamStrategy(
     {
-      returnURL: 'http://localhost:3000/steam/authReturn',
+      returnURL: 'http://localhost:3000/authenticate/steam/authReturn',
       realm: 'http://localhost:3000/',
       apiKey: process.env.STEAM_API_KEY!,
     },
@@ -54,9 +53,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
-app.use('/', homeRouter);
-app.use('/steam', steamRouter);
-app.use('/psn', psnRouter);
+app.use('/user', userRouter);
+app.use('/authenticate', authenticateRouter);
 
 // Global error handler
 app.use(errorHandler);
